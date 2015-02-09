@@ -1,0 +1,1 @@
+./_rel/cowboy_stormpath_release/bin/cowboy_stormpath_release console

@@ -1,3 +1,3 @@
 PROJECT = cowboy_stormpath
-DEPS = cowboy
+DEPS = cowboy erlydtl
 include erlang.mk

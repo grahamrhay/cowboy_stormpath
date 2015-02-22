@@ -12,22 +12,21 @@ init(_, Req, _Opts) ->
 
 handle(Req, State=#state{}) ->
     {Method, _} = cowboy_req:method(Req),
-    case Method of
-        <<"GET">> ->
-            {User, Req2} = cowboy_session:get(<<"user">>, Req),
-            case User of
-                undefined ->
-                    {ok, Reply} = cowboy_req:reply(302, [{<<"Location">>, <<"/login">>}], Req2),
-                    {ok, Reply, State};
-                _ ->
-                    {ok, Body} = user_info_dtl:render(maps:to_list(User)),
-                    {ok, Reply} = cowboy_req:reply(200, [{<<"content-type">>, <<"text/html">>}], Body, Req2),
-                    {ok, Reply, State}
-            end;
+    {ok, Reply} = handle_req(Method, Req),
+    {ok, Reply, State}.
+
+handle_req(<<"GET">>, Req) ->
+    {User, Req2} = cowboy_session:get(<<"user">>, Req),
+    case User of
+        undefined ->
+            cowboy_req:reply(302, [{<<"Location">>, <<"/login">>}], Req2);
         _ ->
-            {ok, Reply} = cowboy_req:reply(405, [], Req),
-            {ok, Reply, State}
-    end.
+            {ok, Body} = user_info_dtl:render(User),
+            cowboy_req:reply(200, [{<<"content-type">>, <<"text/html">>}], Body, Req2)
+    end;
+
+handle_req(_, Req) ->
+    cowboy_req:reply(405, [], Req).
 
 terminate(_Reason, _Req, _State) ->
     ok.

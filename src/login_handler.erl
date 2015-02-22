@@ -21,10 +21,16 @@ handle(Req, State=#state{}) ->
             {ok, Body, Req2} = cowboy_req:body_qs(Req),
             Email = proplists:get_value(<<"email">>, Body),
             Password = proplists:get_value(<<"password">>, Body),
-            {ok, UserInfo} = stormpath:login(Email, Password),
-            {ok, Req3} = cowboy_session:set(<<"user">>, UserInfo, Req2),
-            {ok, Reply} = cowboy_req:reply(302, [{<<"Location">>, <<"/user/info">>}], Req3),
-            {ok, Reply, State}
+            case stormpath:login(Email, Password) of
+                {ok, UserInfo} ->
+                    {ok, Req3} = cowboy_session:set(<<"user">>, UserInfo, Req2),
+                    {ok, Reply} = cowboy_req:reply(302, [{<<"Location">>, <<"/user/info">>}], Req3),
+                    {ok, Reply, State};
+                {error, _, Error} ->
+                    {ok, Body2} = login_dtl:render([{error, Error}, {email, Email}]),
+                    {ok, Reply} = cowboy_req:reply(200, [{<<"content-type">>, <<"text/html">>}], Body2, Req),
+                    {ok, Reply, State}
+            end
     end.
 
 terminate(_Reason, _Req, _State) ->

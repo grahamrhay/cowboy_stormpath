@@ -7,10 +7,16 @@
 
 
 {% block content %}
+    {% if error %}
+        <div class="alert alert-danger" role="alert">
+            <strong>Error!</strong> {{ error }}
+        </div>
+    {% endif %}
+
         <form class="form-signin" action="/login" method="POST">
             <h2 class="form-signin-heading">Log in</h2>
             <label for="inputEmail" class="sr-only">Email address</label>
-            <input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+            <input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus value="{{ email }}">
             <label for="inputPassword" class="sr-only">Password</label>
             <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
             <div class="checkbox">

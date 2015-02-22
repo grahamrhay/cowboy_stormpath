@@ -8,7 +8,10 @@
         kernel,
         stdlib,
         cowboy,
-        erlydtl
+        erlydtl,
+        hackney,
+        jiffy,
+        cowboy_session
     ]},
     {mod, {cowboy_stormpath_app, []}},
     {env, []}

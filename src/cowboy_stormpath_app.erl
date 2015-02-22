@@ -8,6 +8,8 @@ start(_Type, _Args) ->
     Dispatch = cowboy_router:compile([
         {'_', [
             {"/login", login_handler, []},
+            {"/signup", signup_handler, []},
+            {"/user/info", user_info_handler, []},
             {"/", cowboy_static, {priv_file, cowboy_stormpath, "static/index.html"}},
             {"/[...]", cowboy_static, {priv_dir, cowboy_stormpath, "static/"}}
         ]}

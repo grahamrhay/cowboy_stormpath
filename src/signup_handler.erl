@@ -23,15 +23,22 @@ handle(Req, State=#state{}) ->
             Password = proplists:get_value(<<"password">>, Body),
             GivenName = proplists:get_value(<<"givenName">>, Body),
             Surname = proplists:get_value(<<"surname">>, Body),
-            {ok, UserInfo} = stormpath:create_user(#{
+            Res = stormpath:create_user(#{
                 email => Email,
                 password => Password,
                 givenName => GivenName,
                 surname => Surname
             }),
-            {ok, Req3} = cowboy_session:set(<<"user">>, UserInfo, Req2),
-            {ok, Reply} = cowboy_req:reply(302, [{<<"Location">>, <<"/user/info">>}], Req3),
-            {ok, Reply, State}
+            case Res of
+                {ok, UserInfo} ->
+                    {ok, Req3} = cowboy_session:set(<<"user">>, UserInfo, Req2),
+                    {ok, Reply} = cowboy_req:reply(302, [{<<"Location">>, <<"/user/info">>}], Req3),
+                    {ok, Reply, State};
+                {error, _, Error} ->
+                    {ok, Body2} = signup_dtl:render([{error, Error}, {email, Email}, {given_name, GivenName}, {surname, Surname}]),
+                    {ok, Reply} = cowboy_req:reply(200, [{<<"content-type">>, <<"text/html">>}], Body2, Req),
+                    {ok, Reply, State}
+            end
     end.
 
 terminate(_Reason, _Req, _State) ->

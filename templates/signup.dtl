@@ -6,14 +6,20 @@
 {% endblock %}
 
 {% block content %}
+    {% if error %}
+        <div class="alert alert-danger" role="alert">
+            <strong>Error!</strong> {{ error }}
+        </div>
+    {% endif %}
+
       <form class="form-signin" action="/signup" method="POST">
         <h2 class="form-signin-heading">Sign up</h2>
         <label for="inputEmail" class="sr-only">Email address</label>
-        <input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+        <input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus value="{{ email }}">
         <label for="inputGivenName" class="sr-only">Given name</label>
-        <input name="givenName" id="inputGivenName" class="form-control" placeholder="Given name" required autofocus>
+        <input name="givenName" id="inputGivenName" class="form-control" placeholder="Given name" required autofocus value="{{ given_name }}">
         <label for="inputSurname" class="sr-only">Surname</label>
-        <input name="surname" id="inputSurname" class="form-control" placeholder="Surname" required autofocus>
+        <input name="surname" id="inputSurname" class="form-control" placeholder="Surname" required autofocus value="{{ surname }}">
         <label for="inputPassword" class="sr-only">Password</label>
         <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>

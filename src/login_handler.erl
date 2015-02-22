@@ -26,7 +26,7 @@ handle_req(<<"POST">>, Req) ->
         {ok, UserInfo} ->
             {ok, Req3} = cowboy_session:set(<<"user">>, UserInfo, Req2),
             redirect_to(<<"/user/info">>, Req3);
-        {error, _, Error} ->
+        {error, Error} ->
             render_login_page([{error, Error}, {email, Email}], Req2)
     end;
 

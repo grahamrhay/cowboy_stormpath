@@ -34,7 +34,7 @@ handle_req(<<"POST">>, Req) ->
         {ok, UserInfo, Req2} ->
             {ok, Req3} = cowboy_session:set(<<"user">>, UserInfo, Req2),
             cowboy_req:reply(302, [{<<"Location">>, <<"/user/info">>}], Req3);
-        {error, _, Error} ->
+        {error, Error} ->
             render_signup_page([{error, Error}, {email, Email}, {given_name, GivenName}, {surname, Surname}], Req2)
     end;
 

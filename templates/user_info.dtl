@@ -6,4 +6,8 @@
 
 {% block content %}
         <h1>Email: {{ email }}</h1>
+
+        <form action="/logout" method="POST">
+            <button class="btn" type="submit">Log out</button>
+        </form>
 {% endblock %}

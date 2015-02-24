@@ -17,13 +17,8 @@ handle(Req, State=#state{}) ->
 
 handle_req(<<"GET">>, Req) ->
     {User, Req2} = cowboy_session:get(<<"user">>, Req),
-    case User of
-        undefined ->
-            cowboy_req:reply(302, [{<<"Location">>, <<"/login">>}], Req2);
-        _ ->
-            {ok, Body} = user_info_dtl:render(User),
-            cowboy_req:reply(200, [{<<"content-type">>, <<"text/html">>}], Body, Req2)
-    end;
+    {ok, Body} = user_info_dtl:render(User),
+    cowboy_req:reply(200, [{<<"content-type">>, <<"text/html">>}], Body, Req2);
 
 handle_req(_, Req) ->
     cowboy_req:reply(405, [], Req).

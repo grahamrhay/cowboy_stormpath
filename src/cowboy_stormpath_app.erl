@@ -16,7 +16,10 @@ start(_Type, _Args) ->
         ]}
     ]),
     {ok, _} = cowboy:start_http(my_http_listener, 100, [{port, 8080}],
-        [{env, [{dispatch, Dispatch}]}]
+        [
+            {env, [{dispatch, Dispatch}]},
+            {middlewares, [cowboy_router, auth_middleware, cowboy_handler]}
+        ]
     ),
     cowboy_stormpath_sup:start_link().
 
